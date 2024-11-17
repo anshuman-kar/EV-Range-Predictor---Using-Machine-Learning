@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Range Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('{{ url_for("static", filename="image.png") }}');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            overflow: hidden;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.5); /* Transparent background with some opacity */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        .container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input, select, button {
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        input:focus, select:focus, button:focus {
+            outline: none;
+            border-color: #007BFF;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        button {
+            background: #007BFF;
+            color: black;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #loading {
+            font-size: 18px;
+            color: #f1f1f1;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EV Range Predictor</h1>
+        <form id="predictForm">
+            <label for="acceleration">Acceleration (0-100 km/h):</label>
+            <input type="number" name="acceleration" step="0.1" required>
+            
+            <label for="top_speed">Top Speed:</label>
+            <input type="number" name="top_speed" required>
+            
+            <label for="battery_capacity">Battery Capacity:</label>
+            <input type="number" name="battery_capacity" step="0.1" required>
+            
+            <label for="seats">Seats:</label>
+            <input type="number" name="seats" required>
+            
+            <label for="drive">Drive Type:</label>
+            <select name="drive" required>
+                <option value="FWD">FWD</option>
+                <option value="RWD">RWD</option>
+                <option value="AWD">AWD</option>
+            </select>
+            
+            <button type="submit">Predict Range</button>
+        </form>
+        <div id="loading" style="display: none;">Loading...</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("predictForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Show loading
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("result").style.display = "none";
+
+            fetch("/predict", {
+                method: "POST",
+                body: new URLSearchParams(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("loading").style.display = "none";
+                if (data.status === "success") {
+                    document.getElementById("result").textContent = `Predicted Range: ${data.predicted_range}`;
+                } else {
+                    document.getElementById("result").textContent = `Error: ${data.message}`;
+                }
+                document.getElementById("result").style.display = "block";
+            })
+            .catch(error => {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("result").textContent = `Error: ${error}`;
+                document.getElementById("result").style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>
