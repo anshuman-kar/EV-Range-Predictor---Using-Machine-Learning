@@ -34,8 +34,8 @@ The dataset used for training the model contains information on various electric
 
 ### App Interface
 ## 📸 Visualizations
-![Visualization 1](https://github.com/anshuman-kar/Amazon-Sales-Data-Analysis/blob/main/Screenshot%202025-03-16%20220718.png)
-![Visualization 2](https://github.com/anshuman-kar/Amazon-Sales-Data-Analysis/blob/main/Screenshot%202025-03-16%20220732.png)
+![Visualization 1](https://github.com/anshuman-kar/EV-Range-Predictor---Using-Machine-Learning/blob/main/Screenshot%202025-03-16%20223606.png)
+![Visualization 2](https://github.com/anshuman-kar/EV-Range-Predictor---Using-Machine-Learning/blob/main/Screenshot%202025-03-16%20223630.png)
 
 
 
